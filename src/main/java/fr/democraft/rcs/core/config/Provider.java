@@ -1,4 +1,4 @@
-package fr.democraft.rcm.smart.config;
+package fr.democraft.rcs.core.config;
 
 import group.aelysium.rustyconnector.shaded.group.aelysium.declarative_yaml.annotations.Node;
 import group.aelysium.rustyconnector.shaded.group.aelysium.declarative_yaml.lib.Serializable;

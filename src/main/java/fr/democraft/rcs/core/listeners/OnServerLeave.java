@@ -1,9 +1,9 @@
-package fr.democraft.rcm.smart.listeners;
+package fr.democraft.rcs.core.listeners;
 
-import fr.democraft.rcm.smart.SmartProvider;
-import fr.democraft.rcm.smart.config.MainConfig;
-import fr.democraft.rcm.smart.events.CreatePhysicalServer;
-import fr.democraft.rcm.smart.events.DeletePhysicalServer;
+import fr.democraft.rcs.core.SmartProvider;
+
+import fr.democraft.rcs.api.events.DeletePhysicalServer;
+
 import group.aelysium.rustyconnector.RC;
 import group.aelysium.rustyconnector.common.events.EventListener;
 import group.aelysium.rustyconnector.proxy.events.ServerLeaveEvent;

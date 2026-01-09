@@ -1,4 +1,4 @@
-package fr.democraft.rcm.smart.loggers;
+package fr.democraft.rcs.core.loggers;
 
 public interface SmartLogger {
     void log(String message);

@@ -1,4 +1,4 @@
-package fr.democraft.rcm.smart;
+package fr.democraft.rcs.core;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.plugin.Plugin;

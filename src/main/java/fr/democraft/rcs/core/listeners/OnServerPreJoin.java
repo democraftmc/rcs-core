@@ -1,7 +1,9 @@
-package fr.democraft.rcm.smart.listeners;
+package fr.democraft.rcs.core.listeners;
 
-import fr.democraft.rcm.smart.SmartProvider;
-import fr.democraft.rcm.smart.events.CreatePhysicalServer;
+import fr.democraft.rcs.core.SmartProvider;
+
+import fr.democraft.rcs.api.events.CreatePhysicalServer;
+
 import group.aelysium.rustyconnector.RC;
 import group.aelysium.rustyconnector.common.events.EventListener;
 import group.aelysium.rustyconnector.proxy.events.ServerPreJoinEvent;
@@ -13,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static fr.democraft.rcm.smart.utils.ProviderUtils.selectProvider;
+import static fr.democraft.rcs.core.utils.ProviderUtils.selectProvider;
 
 public class OnServerPreJoin {
     @EventListener

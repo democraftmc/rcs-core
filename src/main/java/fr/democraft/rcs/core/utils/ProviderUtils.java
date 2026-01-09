@@ -1,7 +1,7 @@
-package fr.democraft.rcm.smart.utils;
+package fr.democraft.rcs.core.utils;
 
-import fr.democraft.rcm.smart.SmartProvider;
-import fr.democraft.rcm.smart.config.Provider;
+import fr.democraft.rcs.core.SmartProvider;
+import fr.democraft.rcs.core.config.Provider;
 
 import java.util.ArrayList;
 import java.util.List;

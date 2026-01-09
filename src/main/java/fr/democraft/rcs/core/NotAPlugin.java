@@ -1,4 +1,4 @@
-package fr.democraft.rcm.smart;
+package fr.democraft.rcs.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

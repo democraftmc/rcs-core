@@ -1,4 +1,4 @@
-package fr.democraft.rcm.smart.loggers;
+package fr.democraft.rcs.core.loggers;
 
 public class Color {
     public static final String BLUE = "\u001B[94m";

@@ -1,5 +1,5 @@
-package fr.democraft.rcm.smart.loggers;
-import fr.democraft.rcm.smart.SmartProvider;
+package fr.democraft.rcs.core.loggers;
+import fr.democraft.rcs.core.SmartProvider;
 
 public class FancyLogger implements SmartLogger {
     public static String prefix = " SmartRC ";
