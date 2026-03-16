@@ -6,7 +6,7 @@ on:
 
 jobs:
   publish:
-    name: Publish
+    name: Publish devbuild to Modrinth
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

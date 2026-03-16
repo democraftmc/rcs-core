@@ -1,13 +1,16 @@
 name: Publish API to GitHub Packages
 
 on:
+  # Only because we are in alpha
+  push:
+    branches: [ main ]
   release:
-    types: [created]          # déclenché dès qu'une release GitHub est publiée
-  workflow_dispatch:           # déclenchement manuel depuis l'onglet Actions
+    types: [created]
+  workflow_dispatch:
 
 permissions:
   contents: read
-  packages: write              # obligatoire pour pousser vers GitHub Packages
+  packages: write
 
 jobs:
   publish:

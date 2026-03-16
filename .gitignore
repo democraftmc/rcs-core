@@ -27,3 +27,4 @@ replay_pid*
 build
 
 .env
+ARCHITECTURE.md
