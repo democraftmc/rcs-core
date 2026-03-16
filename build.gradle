@@ -1,68 +1,30 @@
-buildscript {
-    repositories {
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath 'com.gradleup.shadow:shadow-gradle-plugin:9.0.0-beta4'
-    }
+
+plugins {
+    id 'base'
 }
 
-apply plugin: 'java'
-apply plugin: 'java-library'
-apply plugin: 'com.gradleup.shadow'
-apply plugin: 'maven-publish'
-
-group = 'fr.democraft.rcs.core'
+group = 'fr.democraft.rcs'
 version = module_version
 
-repositories {
-    mavenCentral()
-    maven { url = "https://maven.mrnavastar.me/snapshots/" }
-    maven { url = "https://maven.mrnavastar.me/releases/" }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url = "https://repo.papermc.io/repository/maven-public/" }
-}
+subprojects {
+    apply plugin: 'java-library'
 
-dependencies {
-    compileOnly          'group.aelysium.rustyconnector:core:0.9.1'
-    compileOnly          'net.kyori:adventure-api:4.17.0'
-    compileOnly          'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
-    compileOnly          'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
-    compileOnly(files("libs/rcs-api-0.0.1-4.jar"))
-    annotationProcessor  'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
-}
+    group = rootProject.group
+    version = rootProject.version
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-    withJavadocJar()
-    withSourcesJar()
-}
+    repositories {
+        mavenCentral()
+    }
 
-compileJava {
-    options.encoding = "UTF-8"
-}
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+        withSourcesJar()
+        withJavadocJar()
+    }
 
-javadoc {
-    options.encoding = 'UTF-8'
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
 }
-
-shadowJar {
-    archiveBaseName.set(archives_base_name)
-    archiveClassifier.set('')
-    mergeServiceFiles()
-    relocate 'org.reflections', 'group.aelysium.rustyconnector.shaded.org.reflections'
-}
-
-tasks.named('jar').configure {
-    enabled = false
-}
-tasks.withType(JavaCompile) {
-    options.compilerArgs += ['-Xdoclint:none']
-}
-tasks.withType(Javadoc) {
-    options.addStringOption('Xdoclint:none', '-quiet')
-}
-
-jar.finalizedBy(shadowJar)

@@ -1,0 +1,40 @@
+plugins {
+    id 'java-library'
+    id 'com.gradleup.shadow' version '9.3.0'
+}
+
+dependencies {
+    implementation project(':api')
+
+    compileOnly 'group.aelysium.rustyconnector:core:0.9.1'
+    compileOnly 'net.kyori:adventure-api:4.17.0'
+    compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
+    compileOnly 'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
+    annotationProcessor 'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
+    implementation 'dev.faststats.metrics:velocity:0.18.1'
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.mrnavastar.me/snapshots/' }
+    maven { url = 'https://maven.mrnavastar.me/releases/' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url = 'https://repo.faststats.dev/releases' }
+}
+
+shadowJar {
+    archiveBaseName.set('rcs-core')
+    archiveClassifier.set('')
+    relocate("dev.faststats", "fr.democraft.rcs.libs.faststats")
+    mergeServiceFiles()
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
