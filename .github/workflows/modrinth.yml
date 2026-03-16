@@ -66,4 +66,4 @@ jobs:
             1.19.x
             1.20.x
             1.21.x
-          files: build/libs/rcm-smart-alpha-${{ steps.vars.outputs.SHORT_SHA }}.jar
+          files: core/build/libs/rcs-core-${{ steps.vars.outputs.SHORT_SHA }}.jar
