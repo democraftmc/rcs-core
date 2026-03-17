@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 
@@ -30,11 +31,17 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.time.Duration;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Plugin(id = "rcm-smart", name = "Rusty Smart", version = "0.1.0-SNAPSHOT",
-        url = "https://smart.democraft.fr", description = "Create & Delete server just like they where legos.", authors = {"Funasitien"})
+        url = "https://smart.democraft.fr",
+        description = "Create & Delete server just like they where legos.",
+        authors = {"Funasitien"},
+        dependencies = {
+                @Dependency(id = "rustyconnector-velocity")
+        })
 public class SmartProvider {
 
     private final ProxyServer server;
@@ -44,8 +51,10 @@ public class SmartProvider {
     public static MainConfig config;
     public static ProviderConfig providerConfig;
     public static ProxyKernel kernel;
+    public static volatile boolean kernelAvailable = false;
     public static SmartApi api;
     public static ExecutorService executor;
+    private final Logger slf4jLogger;
 
     public static final ErrorTracker ERROR_TRACKER = ErrorTracker.contextAware();
     private final VelocityMetrics.Factory metricsFactory;
@@ -54,12 +63,10 @@ public class SmartProvider {
     @Inject
     public SmartProvider(ProxyServer server, Logger logger, final VelocityMetrics.Factory factory) {
         this.server = server;
+        this.slf4jLogger = logger;
         this.metricsFactory = factory;
         SmartProvider.logger = useFancyLogger ? new FancyLogger() : new ClassicLogger();
         SmartProvider.logger.log("Rusty's Smart Provider is booting up, please wait...");
-
-        kernel = RC.P.Kernel();
-
         config = MainConfig.New();
         providerConfig = ProviderConfig.New();
         DEBUG = config.debug;
@@ -67,18 +74,12 @@ public class SmartProvider {
         executor = Executors.newFixedThreadPool(4);
         api = new DefaultSmartApi(new Registry(), new EventPublisher(), executor, Duration.ofSeconds(10));
         SmartApiAccess.set(api);
-
-        kernel.<EventManager>fetchModule("EventManager").onStart(m -> {
-            m.listen(OnServerPreJoin.class);
-            m.listen(OnServerLeave.class);
-        });
-
         for (Provider provider : providerConfig.providers) {
-            logger.debug("Loaded provider: {}", provider.id);
+            SmartProvider.logger.debug("Loaded provider: " + provider.id);
         }
 
-        logger.debug("Event registered successfully");
-        logger.info("Module loaded successfully");
+        SmartProvider.logger.debug("Providers loaded: " + providerConfig.providers.size());
+        SmartProvider.logger.log("Module loaded successfully");
     }
 
     @Subscribe
@@ -87,6 +88,30 @@ public class SmartProvider {
                 .errorTracker(ERROR_TRACKER)
                 .token("17f77f0d0e81f96220b454e0595df8ca")
                 .create(this);
+
+        // Initialize the ProxyKernel here (not in the constructor) because the
+        // RustyConnector kernel may not be registered at Guice construction time.
+        try {
+            kernel = RC.P.Kernel();
+            kernelAvailable = true;
+
+            // Register listeners once the kernel and its EventManager are available
+            kernel.<EventManager>fetchModule("EventManager").onStart(m -> {
+                m.listen(OnServerPreJoin.class);
+                m.listen(OnServerLeave.class);
+            });
+
+            SmartProvider.logger.debug("Event listeners registered with EventManager");
+            SmartProvider.logger.log("Module loaded successfully");
+        } catch (NoSuchElementException ex) {
+            kernelAvailable = false;
+            SmartProvider.logger.error("No Proxy Kernel has been registered for RustyConnector; some features will be disabled.");
+            if (this.slf4jLogger != null) this.slf4jLogger.error("No Proxy Kernel has been registered for RustyConnector; some features will be disabled.", ex);
+        } catch (Exception ex) {
+            kernelAvailable = false;
+            SmartProvider.logger.error("Unexpected error while initializing Proxy Kernel; some features may be disabled.");
+            if (this.slf4jLogger != null) this.slf4jLogger.error("Unexpected error while initializing Proxy Kernel; some features may be disabled.", ex);
+        }
     }
 
     @Subscribe

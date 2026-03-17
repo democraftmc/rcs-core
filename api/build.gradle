@@ -6,19 +6,23 @@ plugins {
 description = 'Public API for Smart provider abstraction'
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/democraftmc/rcs-core")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
-            }
-        }
-    }
     publications {
         gpr(MavenPublication) {
-            from(components.java)
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            name = "funaReleases"
+            url = "https://java.funa.dev/releases"
+            credentials {
+                username = "Funasitien"
+                password = System.getenv("FUNASITIEN_PASSWORD") ?: ""
+            }
+            authentication {
+                basic(BasicAuthentication)
+            }
         }
     }
 }
